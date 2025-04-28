@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.hopital.breno.hopital.converter.DTOToHospitalConverter.convert;
+import static com.hopital.breno.hopital.converter.DTOToHospitalConverter.convertDTOToHospital;
 
 @Service
 @AllArgsConstructor
@@ -23,8 +23,8 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public HospitalDTO cadastrar(HospitalDTO dto) {
         validarCadastro(dto);
-        Hospital hospital = convert(dto);
-        return HospitalToDTOConverter.convert(hospitalRepository.save(hospital));
+        Hospital hospital = convertDTOToHospital(dto);
+        return HospitalToDTOConverter.convertHospitalToDTO(hospitalRepository.save(hospital));
     }
 
     private void validarCadastro(HospitalDTO dto) {
@@ -46,7 +46,7 @@ public class HospitalServiceImpl implements HospitalService {
         }
 
         return hospitais.stream()
-                .map(HospitalToDTOConverter::convert)
+                .map(HospitalToDTOConverter::convertHospitalToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -54,7 +54,7 @@ public class HospitalServiceImpl implements HospitalService {
     public HospitalDTO buscarPorId(Long id){
         Hospital hospital = hospitalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Não foi encontrado um Hospital com o ID: " + id));
-        return HospitalToDTOConverter.convert(hospital);
+        return HospitalToDTOConverter.convertHospitalToDTO(hospital);
 
     }
 
